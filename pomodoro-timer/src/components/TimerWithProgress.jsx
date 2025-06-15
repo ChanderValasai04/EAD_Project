@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 
-const TimerWithProgress = ({ sessionType, durations }) => {
+const TimerWithProgress = ({ sessionType, setSessionType, durations, cycleLimit }) => {
   const [timeLeft, setTimeLeft] = useState(durations[sessionType]);
   const [isRunning, setIsRunning] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
+  const [cycleCount, setCycleCount] = useState(0);
   const timerRef = useRef(null);
 
   const totalDuration = durations[sessionType];
@@ -27,6 +28,7 @@ const TimerWithProgress = ({ sessionType, durations }) => {
         setTimeLeft((prev) => {
           if (prev <= 1) {
             clearInterval(timerRef.current);
+            handleSessionEnd();
             return 0;
           }
           return prev - 1;
@@ -38,6 +40,25 @@ const TimerWithProgress = ({ sessionType, durations }) => {
 
     return () => clearInterval(timerRef.current);
   }, [isRunning]);
+
+  const handleSessionEnd = () => {
+    if (sessionType === "focus") {
+      setSessionType("shortBreak");
+    } else if (sessionType === "shortBreak") {
+      const newCount = cycleCount + 1;
+      if (newCount >= cycleLimit) {
+        setSessionType("longBreak");
+        setCycleCount(0);
+      } else {
+        setSessionType("focus");
+        setCycleCount(newCount);
+      }
+    } else {
+      setSessionType("focus");
+    }
+
+    setHasStarted(false);
+  };
 
   const handleButtonClick = () => {
     if (!hasStarted) {
