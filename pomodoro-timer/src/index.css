@@ -1,12 +1,19 @@
 /* CSS for Header component */
 .app-header {
   background: linear-gradient(to right, #ff6b6b, #f06595, #845ef7);
-  padding: 2rem;
-  text-align: center;
+  padding: 1rem;
   color: white;
   border-bottom-left-radius: 1.5rem;
   border-bottom-right-radius: 1.5rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  width: 100%;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .app-title {
@@ -20,4 +27,26 @@
   font-size: 1.25rem;
   font-weight: 300;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.header-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.header-btn {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 1rem;
+}
+
+.header-btn:hover {
+  background-color: rgba(255, 255, 255, 0.35);
 }
