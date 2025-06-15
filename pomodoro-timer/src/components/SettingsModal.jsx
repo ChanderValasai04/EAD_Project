@@ -1,6 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-const SettingModal = ({ isOpen, onClose }) => {
+const SettingModal = ({ isOpen, onClose, durations, setDurations, cycleLimit, setCycleLimit }) => {
+  const [localDurations, setLocalDurations] = useState(durations);
+  const [localCycleLimit, setLocalCycleLimit] = useState(cycleLimit);
+
+  useEffect(() => {
+    if (isOpen) {
+      setLocalDurations(durations);
+      setLocalCycleLimit(cycleLimit);
+    }
+  }, [isOpen, durations, cycleLimit]);
+
   if (!isOpen) return null;
 
   return (
