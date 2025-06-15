@@ -19,6 +19,12 @@ const SettingModal = ({ isOpen, onClose, durations, setDurations, cycleLimit, se
     }));
   };
 
+  const handleSave = () => {
+    setDurations(localDurations);
+    setCycleLimit(localCycleLimit);
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -64,7 +70,8 @@ const SettingModal = ({ isOpen, onClose, durations, setDurations, cycleLimit, se
           </label>
         </form>
         <div className="modal-buttons">
-          <button onClick={onClose}>Close</button>
+          <button onClick={handleSave}>Save</button>
+          <button onClick={onClose} className="cancel-button">Cancel</button>
         </div>
       </div>
     </div>
