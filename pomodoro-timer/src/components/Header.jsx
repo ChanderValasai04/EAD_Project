@@ -5,7 +5,7 @@ const Header = ({ onOpenSettings, onToggleHistory }) => {
     <header className="app-header">
       <div className="header-content">
         <div>
-          <h1 className="app-title">Pomodoro Timer</h1>
+          <h1 className="app-title">Pomodoro Timer 🍅</h1>
           <p className="app-subtitle">Boost focus with the Pomodoro Technique</p>
         </div>
         <div className="header-buttons">
