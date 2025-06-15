@@ -6,6 +6,14 @@ const TimerWithProgress = ({ sessionType, durations }) => {
   const [hasStarted, setHasStarted] = useState(false);
   const timerRef = useRef(null);
 
+  const totalDuration = durations[sessionType];
+  const radius = 90;
+  const stroke = 10;
+  const normalizedRadius = radius - stroke / 2;
+  const circumference = 2 * Math.PI * normalizedRadius;
+  const progress = timeLeft / totalDuration;
+  const offset = circumference * (1 - progress);
+
   useEffect(() => {
     setTimeLeft(durations[sessionType]);
     setIsRunning(false);
@@ -54,9 +62,35 @@ const TimerWithProgress = ({ sessionType, durations }) => {
   };
 
   return (
-    <div>
-      <p>{formatTime(timeLeft)}</p>
-      <div>
+    <div className="progress-timer-container">
+      <svg className="progress-ring" height={radius * 2} width={radius * 2}>
+        <circle
+          stroke="#e6e6e6"
+          fill="transparent"
+          strokeWidth={stroke}
+          r={normalizedRadius}
+          cx={radius}
+          cy={radius}
+        />
+        <circle
+          className="progress-ring__circle"
+          stroke="#000"
+          fill="transparent"
+          strokeWidth={stroke}
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          r={normalizedRadius}
+          cx={radius}
+          cy={radius}
+          transform={`rotate(-90 ${radius} ${radius})`}
+        />
+      </svg>
+
+      <div className="progress-content">
+        <p className="time-left">{formatTime(timeLeft)}</p>
+      </div>
+
+      <div className="controls">
         <button onClick={handleButtonClick}>
           {!hasStarted ? "Start" : isRunning ? "Pause" : "Resume"}
         </button>
