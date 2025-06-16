@@ -7,6 +7,12 @@ const TimerWithProgress = ({ sessionType, setSessionType, durations, cycleLimit 
   const [cycleCount, setCycleCount] = useState(0);
   const timerRef = useRef(null);
 
+  const soundRefs = useRef({
+    focusToBreak: new Audio("/sounds/focus-end.wav"),
+    breakToFocus: new Audio("/sounds/break-end.wav"),
+    breakToLongBreak: new Audio("/sounds/longbreak-start.wav"),
+  });
+
   const totalDuration = durations[sessionType];
   const radius = 90;
   const stroke = 10;
@@ -43,17 +49,22 @@ const TimerWithProgress = ({ sessionType, setSessionType, durations, cycleLimit 
 
   const handleSessionEnd = () => {
     if (sessionType === "focus") {
+      soundRefs.current.focusToBreak.play();
       setSessionType("shortBreak");
     } else if (sessionType === "shortBreak") {
       const newCount = cycleCount + 1;
+
       if (newCount >= cycleLimit) {
+        soundRefs.current.breakToLongBreak.play();
         setSessionType("longBreak");
         setCycleCount(0);
       } else {
+        soundRefs.current.breakToFocus.play();
         setSessionType("focus");
         setCycleCount(newCount);
       }
     } else {
+      soundRefs.current.breakToFocus.play();
       setSessionType("focus");
     }
 
@@ -70,11 +81,13 @@ const TimerWithProgress = ({ sessionType, setSessionType, durations, cycleLimit 
   };
 
   const handleReset = () => {
-    clearInterval(timerRef.current);
-    setTimeLeft(durations[sessionType]);
-    setIsRunning(false);
-    setHasStarted(false);
-  };
+  clearInterval(timerRef.current);
+  setSessionType("focus"); 
+  setTimeLeft(durations["focus"]); 
+  setIsRunning(false);
+  setHasStarted(false);
+  setCycleCount(0); 
+};
 
   const formatTime = (seconds) => {
     const m = String(Math.floor(seconds / 60)).padStart(2, "0");
