@@ -27,7 +27,7 @@ function App() {
   };
 
   return (
-    <div className={`app-container`}>
+    <div className={`app-container ${getBackgroundClass()}`}>
       <Header 
         onOpenSettings={() => setShowSettings(true)}
       />
