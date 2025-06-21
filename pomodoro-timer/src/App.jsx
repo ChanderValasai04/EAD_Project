@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 import Header from './components/Header';
@@ -6,6 +6,7 @@ import ControlPanel from './components/ControlPanel';
 import SettingsModal from './components/SettingsModal';
 import Footer from './components/Footer';
 import TimerWithProgress from './components/TimerWithProgress';
+import SessionHistory from './components/SessionHistory';
 
 function App() {
   const [durations, setDurations] = useState({
@@ -17,6 +18,37 @@ function App() {
 
   const [showSettings, setShowSettings] = useState(false);
   const [sessionType, setSessionType] = useState('focus'); 
+  const [showHistory, setShowHistory] = useState(false);
+
+  const [sessionHistory, setSessionHistory] = useState(() => {
+    const saved = localStorage.getItem('pomodoro-history');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('pomodoro-history', JSON.stringify(sessionHistory));
+  }, [sessionHistory]);
+
+  const addToHistory = (type, startTimestamp) => {
+    const endTimestamp = new Date();
+    const durationMinutes = Math.round((endTimestamp - new Date(startTimestamp)) / 60000);
+
+    setSessionHistory((prev) => [
+      ...prev,
+      {
+        type,
+        date: endTimestamp.toLocaleDateString(),
+        timeStarted: new Date(startTimestamp).toLocaleTimeString(),
+        timeEnded: endTimestamp.toLocaleTimeString(),
+        durationMinutes,
+      },
+    ]);
+  };
+
+  const clearHistory = () => {
+    setSessionHistory([]);
+
+  };
 
   const getBackgroundClass = () => {
     switch (sessionType) {
@@ -30,6 +62,7 @@ function App() {
     <div className={`app-container ${getBackgroundClass()}`}>
       <Header 
         onOpenSettings={() => setShowSettings(true)}
+        onToggleHistory={() => setShowHistory((prev) => !prev)}
       />
       
       <main className="timer-wrapper">
@@ -38,6 +71,7 @@ function App() {
           setSessionType={setSessionType}
           durations={durations}
           cycleLimit={cycleLimit}
+          addToHistory={addToHistory}
         />
 
         <ControlPanel 
@@ -65,6 +99,14 @@ function App() {
           })}
           cycleLimit={cycleLimit}
           setCycleLimit={setCycleLimit}
+        />
+      )}
+
+      {showHistory && (
+        <SessionHistory
+          sessionHistory={sessionHistory}
+          onClearHistory={clearHistory}
+          onClose={() => setShowHistory(false)}
         />
       )}
 
