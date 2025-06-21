@@ -6,6 +6,7 @@ const TimerWithProgress = ({ sessionType, setSessionType, durations, cycleLimit,
   const [hasStarted, setHasStarted] = useState(false);
   const [cycleCount, setCycleCount] = useState(0);
   const timerRef = useRef(null);
+  const [sessionStartTime, setSessionStartTime] = useState(null);
   const sessionEnded = useRef(false);
 
   const soundRefs = useRef({
@@ -55,10 +56,10 @@ const TimerWithProgress = ({ sessionType, setSessionType, durations, cycleLimit,
   const handleSessionEnd = () => {
     if (sessionType === "focus") {
       soundRefs.current.focusToBreak.play();
-      addToHistory("Focus");
+      addToHistory("Focus", sessionStartTime);
       setSessionType("shortBreak");
     } else if (sessionType === "shortBreak") {
-      addToHistory("Short Break");
+      addToHistory("Short Break", sessionStartTime);
       const newCount = cycleCount + 1;
 
       if (newCount >= cycleLimit) {
@@ -71,11 +72,12 @@ const TimerWithProgress = ({ sessionType, setSessionType, durations, cycleLimit,
         setCycleCount(newCount);
       }
     } else {
-      addToHistory("Long Break");
+      addToHistory("Long Break", sessionStartTime);
       soundRefs.current.breakToFocus.play();
       setSessionType("focus");
     }
 
+    setSessionStartTime(null);
     setHasStarted(false);
   };
 
@@ -84,6 +86,7 @@ const TimerWithProgress = ({ sessionType, setSessionType, durations, cycleLimit,
       setHasStarted(true);
       sessionEnded.current = false; 
       setIsRunning(true);
+      setSessionStartTime(new Date());
     } else {
       setIsRunning((prev) => !prev);
     }
