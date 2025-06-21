@@ -2,4 +2,4 @@
 
 
 ### Visit following link to view the project.
-https://pomodorosai/netlify.app
+https://pomodorosai.netlify.app
