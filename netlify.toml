@@ -1,0 +1,4 @@
+[build]
+  base = "pomodoro-timer"
+  command = "npm run build"
+  publish = "pomodoro-timer/build"
